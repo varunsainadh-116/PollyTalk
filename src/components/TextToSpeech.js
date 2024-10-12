@@ -4,61 +4,74 @@ import { useState, useRef, useEffect } from 'react'
 import { TextInput } from './TextInput'
 import { ControlButtons } from './ControlButtons'
 import { Waveform } from './Waveform'
+import AWS from 'aws-sdk'
+
+AWS.config.update({ 
+  region: process.env.NEXT_PUBLIC_REGION,
+  accessKeyId: process.env.NEXT_PUBLIC_CLIENTID,
+  secretAccessKey: process.env.NEXT_PUBLIC_SECRETKEY
+})
+
+const Polly = new AWS.Polly()
 
 export function TextToSpeech() {
   const [text, setText] = useState("")
   const [isPlaying, setIsPlaying] = useState(false)
-  const synth = useRef(null)
-  const utterance = useRef(null)
-  const davidVoice = useRef(null)
+  const [audioFile, setAudioFile] = useState(null)
+  const audioRef = useRef(null)
+
+  const handleTextToSpeech = () => {
+    Polly.synthesizeSpeech({
+      Text: text,
+      OutputFormat: "mp3",
+      VoiceId: "Salli"
+    }, (error, data) => {
+      if (error) {
+        console.error(error)
+      } else {
+        setAudioFile(data)
+      }
+    })
+  }
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      synth.current = window.speechSynthesis
-      utterance.current = new SpeechSynthesisUtterance()
-      utterance.current.onend = () => setIsPlaying(false)
-
-      const loadVoices = () => {
-        const voices = synth.current.getVoices()
-        davidVoice.current = voices.find(voice => 
-          voice.name === "Microsoft David - English (United States)" && 
-          voice.lang === "en-US"
-        )
-        if (davidVoice.current) {
-          utterance.current.voice = davidVoice.current
-        } else {
-          console.warn("Microsoft David voice not found. Using default voice.")
-        }
+    if (audioFile && audioFile.AudioStream) {
+      const audioBlob = new Blob([audioFile.AudioStream], { type: "audio/mp3" })
+      const audioUrl = URL.createObjectURL(audioBlob)
+      
+      if (audioRef.current) {
+        audioRef.current.src = audioUrl
       }
 
-      synth.current.onvoiceschanged = loadVoices
-      loadVoices()
+      return () => {
+        URL.revokeObjectURL(audioUrl)
+      }
     }
-  }, [])
+  }, [audioFile])
 
   const handlePlay = () => {
-    if (!synth.current || !utterance.current) return
-
-    if (isPlaying) {
-      synth.current.cancel()
-      setIsPlaying(false)
-    } else {
-      utterance.current.text = text
-      synth.current.speak(utterance.current)
-      setIsPlaying(true)
+    if (audioRef.current) {
+      if (isPlaying) {
+        audioRef.current.pause()
+      } else {
+        audioRef.current.play()
+      }
+      setIsPlaying(!isPlaying)
     }
   }
 
   const handleDownload = () => {
-    if (typeof window === 'undefined') return
-
-    const element = document.createElement("a")
-    const file = new Blob([text], {type: 'text/plain'})
-    element.href = URL.createObjectURL(file)
-    element.download = "speech.txt"
-    document.body.appendChild(element)
-    element.click()
-    document.body.removeChild(element)
+    if (audioFile && audioFile.AudioStream) {
+      const audioBlob = new Blob([audioFile.AudioStream], { type: "audio/mp3" })
+      const audioUrl = URL.createObjectURL(audioBlob)
+      const link = document.createElement("a")
+      link.href = audioUrl
+      link.download = "PollyTalk.mp3"
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(audioUrl)
+    }
   }
 
   return (
@@ -66,9 +79,15 @@ export function TextToSpeech() {
       <h1 className="text-4xl font-bold mb-8">"Speak Your Mind with Polly!"</h1>
       <div className="w-full max-w-3xl relative">
         <TextInput value={text} onChange={(e) => setText(e.target.value)} />
-        <ControlButtons isPlaying={isPlaying} onPlay={handlePlay} onDownload={handleDownload} />
+        <ControlButtons 
+          isPlaying={isPlaying} 
+          onPlay={handlePlay} 
+          onDownload={handleDownload} 
+          onTextToSpeech={handleTextToSpeech} 
+        />
       </div>
       <Waveform isPlaying={isPlaying} />
+      <audio ref={audioRef} />
     </div>
   )
 }
