@@ -76,7 +76,8 @@ export function TextToSpeech() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4 relative">
-      <h1 className="text-4xl font-bold mb-8">"Speak Your Mind with Polly!"</h1>
+      <h1 className="text-4xl font-bold mb-8">&quot;Speak Your Mind with Polly!&quot;</h1>
+
       <div className="w-full max-w-3xl relative">
         <TextInput value={text} onChange={(e) => setText(e.target.value)} />
         <ControlButtons 
