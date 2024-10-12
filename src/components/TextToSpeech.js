@@ -1,4 +1,3 @@
-// src/components/TextToSpeech.js
 "use client"
 
 import { useState, useRef, useEffect } from 'react'
@@ -65,7 +64,7 @@ export function TextToSpeech() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-white p-4 relative">
       <h1 className="text-4xl font-bold mb-8">"Speak Your Mind with Polly!"</h1>
-      <div className="w-full max-w-3xl relative"> {/* Changed from max-w-md to max-w-3xl */}
+      <div className="w-full max-w-3xl relative">
         <TextInput value={text} onChange={(e) => setText(e.target.value)} />
         <ControlButtons isPlaying={isPlaying} onPlay={handlePlay} onDownload={handleDownload} />
       </div>
