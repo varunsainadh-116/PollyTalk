@@ -1,5 +1,5 @@
 // src/components/ui/button.js
-import * as React from "react"
+import * as React from "react";
 
 const Button = React.forwardRef(({ className, ...props }, ref) => {
   return (
@@ -8,8 +8,8 @@ const Button = React.forwardRef(({ className, ...props }, ref) => {
       ref={ref}
       {...props}
     />
-  )
-})
-Button.displayName = "Button"
+  );
+});
+Button.displayName = "Button";
 
-export { Button }
+export { Button };

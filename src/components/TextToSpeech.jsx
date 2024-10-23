@@ -18,9 +18,13 @@ export function TextToSpeech() {
   const [text, setText] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [audioFile, setAudioFile] = useState(null);
+  const [isConverted, setIsConverted] = useState(false);
+  const [converting, setConverting] = useState(false);
   const audioRef = useRef(null);
 
   const handleTextToSpeech = () => {
+    if (!text) return;
+    setConverting(true);
     Polly.synthesizeSpeech(
       {
         Text: text,
@@ -32,9 +36,11 @@ export function TextToSpeech() {
           console.error(error);
         } else {
           setAudioFile(data);
+          setIsConverted(true);
         }
       }
     );
+    setConverting(false);
   };
 
   useEffect(() => {
@@ -55,7 +61,7 @@ export function TextToSpeech() {
   }, [audioFile]);
 
   const handlePlay = () => {
-    if (audioRef.current) {
+    if (audioRef.current && isConverted) {
       if (isPlaying) {
         audioRef.current.pause();
       } else {
@@ -86,7 +92,6 @@ export function TextToSpeech() {
       <h1 className="text-4xl font-bold mb-8">
         &quot;Speak Your Mind with Polly!&quot;
       </h1>
-
       <div className="w-full max-w-3xl relative">
         <TextInput value={text} onChange={(e) => setText(e.target.value)} />
         <ControlButtons
@@ -94,6 +99,7 @@ export function TextToSpeech() {
           onPlay={handlePlay}
           onDownload={handleDownload}
           onTextToSpeech={handleTextToSpeech}
+          isPlayDisabled={!isConverted}
         />
       </div>
       <Waveform isPlaying={isPlaying} />

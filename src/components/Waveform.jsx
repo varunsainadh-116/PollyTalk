@@ -2,7 +2,7 @@ export function Waveform({ isPlaying }) {
   return (
     <div className="waveform">
       {[...Array(100)].map((_, index) => (
-        <div key={index} className={`wave ${isPlaying ? 'animate' : ''}`}></div>
+        <div key={index} className={`wave ${isPlaying ? "animate" : ""}`}></div>
       ))}
       <style jsx>{`
         .waveform {
@@ -28,25 +28,30 @@ export function Waveform({ isPlaying }) {
           animation: wave 1s ease-in-out infinite;
         }
         @keyframes wave {
-          0%, 100% {
+          0%,
+          100% {
             transform: scaleY(0.2);
           }
           50% {
             transform: scaleY(1);
           }
         }
-        ${[...Array(100)].map((_, index) => `
+        ${[...Array(100)]
+          .map(
+            (_, index) => `
           .wave:nth-child(${index + 1}) {
-            background: linear-gradient(45deg, 
-              hsl(${220 + index * 0.6}, 30%, ${10 + index * 0.2}%), 
+            background: linear-gradient(45deg,
+              hsl(${220 + index * 0.6}, 30%, ${10 + index * 0.2}%),
               hsl(${240 + index * 0.6}, 40%, ${15 + index * 0.2}%)
             );
           }
           .wave.animate:nth-child(${index + 1}) {
             animation-delay: ${index * 0.02}s;
           }
-        `).join('')}
+        `
+          )
+          .join("")}
       `}</style>
     </div>
-  )
+  );
 }
