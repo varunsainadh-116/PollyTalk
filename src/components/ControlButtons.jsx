@@ -1,7 +1,13 @@
-import { Button } from "@/components/ui/button"
-import { Play, Pause, Download, RefreshCw } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Play, Pause, Download, RefreshCw } from "lucide-react";
 
-export function ControlButtons({ isPlaying, onPlay, onDownload, onTextToSpeech }) {
+export function ControlButtons({
+  isPlaying,
+  onPlay,
+  onDownload,
+  onTextToSpeech,
+  isPlayDisabled,
+}) {
   return (
     <div className="flex justify-between mt-4 space-x-4">
       <div className="flex space-x-2">
@@ -14,6 +20,7 @@ export function ControlButtons({ isPlaying, onPlay, onDownload, onTextToSpeech }
         </Button>
         <Button
           onClick={onPlay}
+          disabled={isPlayDisabled}
           className="w-12 h-12 rounded-full bg-green-500 hover:bg-green-600 text-white flex items-center justify-center"
         >
           {isPlaying ? <Pause size={24} /> : <Play size={24} />}
@@ -26,5 +33,5 @@ export function ControlButtons({ isPlaying, onPlay, onDownload, onTextToSpeech }
         <Download size={24} />
       </Button>
     </div>
-  )
+  );
 }

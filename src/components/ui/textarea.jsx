@@ -1,5 +1,5 @@
 // src/components/ui/textarea.js
-import * as React from "react"
+import * as React from "react";
 
 const Textarea = React.forwardRef(({ className, ...props }, ref) => {
   return (
@@ -8,8 +8,8 @@ const Textarea = React.forwardRef(({ className, ...props }, ref) => {
       ref={ref}
       {...props}
     />
-  )
-})
-Textarea.displayName = "Textarea"
+  );
+});
+Textarea.displayName = "Textarea";
 
-export { Textarea }
+export { Textarea };
