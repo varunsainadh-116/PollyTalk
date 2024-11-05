@@ -1,7 +1,7 @@
 # <img src="https://github.com/user-attachments/assets/81d564f4-31e0-477c-a485-efb6afbff4c7" alt="PollyTalk Icon" height="50" /> PollyTalk
 
 PollyTalk is a web application that converts user-input text into natural-sounding speech using AWS Polly. Built with Next.js, Tailwind CSS, and deployed on AWS Amplify, PollyTalk offers a seamless and user-friendly experience for converting text to audio. The application provides the option to listen to the generated speech online or download it as an MP3 file for offline use.
- 🔗 [Website-Link](https://main.d1hso73g25jm7y.amplifyapp.com/)
+ 🔗 [Website-Link](https://main.d79pod31zvamo.amplifyapp.com/)
 
 
  https://github.com/user-attachments/assets/20fe44d3-21fb-4220-8daa-a4ed0081fbca 
